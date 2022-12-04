@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">GitHubUsers</string>
+    <string name="avatar">Avatar</string>
+    <string name="search_key">Search Key ..</string>
+    <string name="search_for_user">Search For User ..</string>
+    <string name="user_not_found">User Not Found ..</string>
+    <string name="no_user_found">No User Found ..</string>
+    <string name="type">Type</string>
+    <string name="name">Name</string>
+    <string name="company">Company</string>
+    <string name="blog">Blog</string>
+    <string name="location">Location</string>
+    <string name="email">Email</string>
+    <string name="bio">Bio</string>
+    <string name="twitter_user_name">Twitter User Name</string>
+    <string name="public_repos">Public Repos</string>
+    <string name="public_gists">Public Gists</string>
+    <string name="followers">Followers</string>
+    <string name="show">Show</string>
+    <string name="following">Following</string>
+    <string name="updated_date">Updated Date</string>
+    <string name="created_date">Created Date</string>
+    <string name="users">Users</string>
+</resources>
