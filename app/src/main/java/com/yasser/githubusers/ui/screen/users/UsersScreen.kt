@@ -8,8 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +22,7 @@ import androidx.navigation.navArgument
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.yasser.githubusers.data.user.model.useres.UserDomain
 import com.yasser.githubusers.manager.NavigationManager
 import com.yasser.githubusers.ui.card.UserCard
 import timber.log.Timber
@@ -36,7 +36,7 @@ fun NavController.navigateToUsers(userName:String, getUsersFilter: NavigationMan
     }
 }
 
-fun NavGraphBuilder.users(){
+fun NavGraphBuilder.users(updateSelectedUser:(userDomain: UserDomain?)->Unit){
     NavigationManager.Users.let {users->
         composable(
             route = "${users.route}/{${users.userNameArg}}/{${users.getUsersFilterArg}}",
@@ -47,6 +47,12 @@ fun NavGraphBuilder.users(){
         ){
             val usersViewModel: UsersViewModel= hiltViewModel()
             val usersUIState=usersViewModel.usersUIState
+
+            val selectedUserDomain by usersViewModel.userDomain.collectAsState()
+            LaunchedEffect(key1 = selectedUserDomain, block = {
+                updateSelectedUser(selectedUserDomain)
+            })
+
             UsersScreen(usersUIState = usersUIState)
         }
     }

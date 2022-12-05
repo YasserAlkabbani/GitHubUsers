@@ -21,4 +21,7 @@
     <string name="updated_date">Updated Date</string>
     <string name="created_date">Created Date</string>
     <string name="users">Users</string>
+    <string name="loading">Loading</string>
+    <string name="connection_error">Connection Error</string>
+    <string name="too_many_request">Too Many Request</string>
 </resources>
