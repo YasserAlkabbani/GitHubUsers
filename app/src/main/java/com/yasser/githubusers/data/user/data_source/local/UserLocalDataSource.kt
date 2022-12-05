@@ -8,24 +8,31 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
-class UserLocalDataSource @Inject constructor(
-    private val githubDatabase: GithubDatabase, private val userDao: UserDao
-) {
+class DefaultUserLocalDataSource @Inject constructor(private val userDao: UserDao) : UserLocalDataSource {
 
-    suspend fun insertOrReplaceUsers(vararg users: UserEntity) = userDao.insertOrReplaceUsers(*users)
+    override suspend fun insertOrReplaceUsers(vararg users: UserEntity) = userDao.insertOrReplaceUsers(*users)
 
-    fun findUserByUserNameAsFlow(userNameSearchKey:String): Flow<UserEntity?> =
+    override fun findUserByUserNameAsFlow(userNameSearchKey:String): Flow<UserEntity?> =
         userDao.findUserByUserNameAsFlow(userNameSearchKey)
 
-    fun getUsersAsPagingSource(): PagingSource<Int, UserEntity> =
-        userDao.getUsersAsPagingSource()
-
-    suspend fun insertFollowers(vararg followUserCrossRef: FollowUserCrossRef) =
+    override suspend fun insertFollowers(vararg followUserCrossRef: FollowUserCrossRef) =
         userDao.insertFollowers(*followUserCrossRef)
 
-    fun getUserFollowersAsPagingSource(userName:String):PagingSource<Int,UserEntity> =
+    override fun getUserFollowersAsPagingSource(userName:String):PagingSource<Int,UserEntity> =
         userDao.getUserFollowersAsPagingSource(userName)
 
-    fun getUserFollowingAsPagingSource(userName:String):PagingSource<Int,UserEntity> =
+    override fun getUserFollowingAsPagingSource(userName:String):PagingSource<Int,UserEntity> =
         userDao.getUserFollowingAsPagingSource(userName)
+
+}
+
+interface UserLocalDataSource {
+
+    suspend fun insertOrReplaceUsers(vararg users: UserEntity)
+    fun findUserByUserNameAsFlow(userNameSearchKey: String): Flow<UserEntity?>
+
+    suspend fun insertFollowers(vararg followUserCrossRef: FollowUserCrossRef)
+    fun getUserFollowersAsPagingSource(userName: String): PagingSource<Int, UserEntity>
+    fun getUserFollowingAsPagingSource(userName: String): PagingSource<Int, UserEntity>
+
 }

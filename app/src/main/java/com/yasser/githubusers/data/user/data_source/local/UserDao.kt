@@ -24,6 +24,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFollowers(vararg followUserCrossRef:FollowUserCrossRef)
 
+    @Query("SELECT * FROM following_user_cross_ref WHERE user_name=:userName")
+    suspend fun getFollowUserCrossRefByUserName(userName: String):FollowUserCrossRef?
+
     @Query(
         "SELECT * FROM users_table " +
         "LEFT JOIN following_user_cross_ref ON users_table.user_name=following_user_cross_ref.following_user_name " +

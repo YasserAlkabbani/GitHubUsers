@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,6 +17,7 @@ import com.yasser.githubusers.data.user.model.useres.UserDomain
 import com.yasser.githubusers.ui.component.GitHubButton
 import com.yasser.githubusers.ui.component.GitHubImage
 import com.yasser.githubusers.ui.component.GitHubText
+import com.yasser.githubusers.utils.const.TestTag
 
 @Composable
 private fun KeyWithValue(modifier: Modifier=Modifier,key:String,value:String,onClick:(()->Unit)?=null){
@@ -50,11 +52,11 @@ private fun KeyWithValue(modifier: Modifier=Modifier,key:String,value:String,onC
 @Composable
 fun UserDetailsSlot(
     userDomain: UserDomain,
-    showFollowers:(UserDomain)->Unit,showFollowing:(UserDomain)->Unit
+    showFollowers:(String)->Unit,showFollowing:(String)->Unit
 ){
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(
-            Modifier
+            Modifier.testTag(TestTag.USER_DETAILS)
                 .fillMaxWidth()
                 .padding(10.dp)) {
             Row(
@@ -80,11 +82,11 @@ fun UserDetailsSlot(
             KeyWithValue(key = stringResource(R.string.public_gists), value = userDomain.publicGists.toString())
             KeyWithValue(
                 key = stringResource(R.string.followers), value = userDomain.followers.toString(),
-                onClick = {showFollowers(userDomain)}
+                onClick = {showFollowers(userDomain.userName)}
             )
             KeyWithValue(
                 key = stringResource(R.string.following), value = userDomain.following.toString(),
-                onClick = {showFollowing(userDomain)}
+                onClick = {showFollowing(userDomain.userName)}
             )
             KeyWithValue(key = stringResource(R.string.updated_date), value = userDomain.updatedAt)
             KeyWithValue(key = stringResource(R.string.created_date), value = userDomain.createdAt)

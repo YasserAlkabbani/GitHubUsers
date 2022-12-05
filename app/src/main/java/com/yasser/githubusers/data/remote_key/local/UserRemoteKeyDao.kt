@@ -13,7 +13,7 @@ interface UserRemoteKeyDao {
     suspend fun insertOrReplaceUserRemoteKey(remoteKey: UserRemoteKeyEntity)
 
     @Query("SELECT * FROM user_remote_keys WHERE userName =:userName")
-    suspend fun getUserRemoteKeyByUserName(userName: String): UserRemoteKeyEntity?
+    suspend fun findUserRemoteKeyByUserName(userName: String): UserRemoteKeyEntity?
 
     @Query("DELETE FROM user_remote_keys")
     suspend fun clearUserRemoteKey()

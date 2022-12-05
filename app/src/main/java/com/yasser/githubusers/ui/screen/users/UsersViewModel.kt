@@ -24,6 +24,8 @@ class UsersViewModel @Inject constructor (
 ):ViewModel(){
 
     private val userName:Flow<String> =savedStateHandle.getStateFlow(NavigationManager.Users.userNameArg,null).filterNotNull()
+    val userDomain=userName.flatMapLatest { userRepository.findUserByUserNameAsFlow(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly,null)
     private val getUsersFilter=
         savedStateHandle.getStateFlow<String?>(NavigationManager.Users.getUsersFilterArg,null).mapNotNull {
             when(it){
@@ -32,6 +34,7 @@ class UsersViewModel @Inject constructor (
                 else -> null
         }
     }
+
     private val userNameWithGetUserFilter= combine(userName,getUsersFilter){
             userName,getUsersFilter-> userName to getUsersFilter
     }
@@ -46,6 +49,7 @@ class UsersViewModel @Inject constructor (
                 }
         }.flowOn(Dispatchers.Default).cachedIn(viewModelScope),
     )
+
 
 }
 
