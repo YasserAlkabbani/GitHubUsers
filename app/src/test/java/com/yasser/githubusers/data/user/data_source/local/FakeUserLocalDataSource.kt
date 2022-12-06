@@ -25,14 +25,14 @@ class FakeUserLocalDataSource:UserLocalDataSource {
     }
 
     override fun getUserFollowingAsPagingSource(userName: String): PagingSource<Int, UserEntity> =
-        UserPagingSource {
+        UserPagingSource {page->
             val myFollowingUserName=followUserCrossRefList.value.filter { it.userName==userName }.map { it.followingUserName }
             val myFollowing=userList.value.filter { myFollowingUserName.contains(it.userName) }
             myFollowing
         }
 
     override fun getUserFollowersAsPagingSource(userName: String): PagingSource<Int, UserEntity> =
-        UserPagingSource {
+        UserPagingSource {page->
             val myFollowerUserName=followUserCrossRefList.value.filter { it.followingUserName==userName }.map { it.userName }
             val myFollower=userList.value.filter { myFollowerUserName.contains(it.userName) }
             myFollower

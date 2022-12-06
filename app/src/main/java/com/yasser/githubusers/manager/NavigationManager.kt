@@ -5,9 +5,9 @@ sealed class NavigationManager{
     object Users:NavigationManager(){
         const val route="users"
         const val userNameArg="userName"
-        const val getUsersFilterArg="getUsersFilter"
+        const val usersFilterArg="getUsersFilter"
 
-        enum class GetUsersFilter{ Follower,Following }
+        enum class UsersFilter{ Follower,Following }
     }
 
     object SearchForUser:NavigationManager(){

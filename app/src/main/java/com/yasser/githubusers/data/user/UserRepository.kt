@@ -30,10 +30,7 @@ class DefaultUserRepository @Inject constructor(
     override fun findUserByUserNameAsFlow(userName:String)= userLocalDataSource.findUserByUserNameAsFlow(userName)
             .map { it?.asDomain() }.flowOn(Dispatchers.Default)
 
-
-
-
-    private suspend fun insertFollowersUsersWithFollowingUserWithRemoteKey(
+    suspend fun insertFollowersUsersWithFollowingUserWithRemoteKey(
         userName:String, followingUsers:List<UserEntity>?, followersUsers:List<UserEntity>?, userRemoteKey: UserRemoteKeyEntity?
     ){
         suspend fun insertOrReplaceFollowingCrossRef(userName:String, following:List<UserEntity>){

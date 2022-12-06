@@ -1,12 +1,11 @@
 package com.yasser.githubusers.data.user
 
+import androidx.paging.*
 import com.yasser.githubusers.MainDispatcherRule
 import com.yasser.githubusers.data.user.data_source.local.FakeUserLocalDataSource
 import com.yasser.githubusers.data.user.data_source.remote.FakeUserRemoteDataSource
 import com.yasser.githubusers.data.user.model.useres.UserEntity
-import com.yasser.githubusers.data.user.model.useres.UserRemote
 import com.yasser.githubusers.data.user_remote_key.FakeUserRemoteKeyLocalDataSource
-import com.yasser.githubusers.utils.extention.asTimeZoneDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -23,6 +22,7 @@ class DefaultUserRepositoryTest {
     private lateinit var fakeUserLocalDataSource: FakeUserLocalDataSource
     private lateinit var fakeUserRemoteDataSource: FakeUserRemoteDataSource
     private lateinit var fakeUserRemoteKeyLocalDataSource: FakeUserRemoteKeyLocalDataSource
+
     private lateinit var defaultUserRepository: DefaultUserRepository
 
     @get:Rule
@@ -40,12 +40,9 @@ class DefaultUserRepositoryTest {
     @Test
     fun refreshUserByUserName() = runTest{
         defaultUserRepository.refreshUserByUserName("USER_1")
-
         val user1=defaultUserRepository.findUserByUserNameAsFlow("USER_1").first()
         val user2=defaultUserRepository.findUserByUserNameAsFlow("USER_2").first()
-
         advanceUntilIdle()
-
         assertEquals(user1?.userName,"USER_1")
         assertNull(user2?.userName)
     }
@@ -60,14 +57,69 @@ class DefaultUserRepositoryTest {
         assertNull(user2AsFlow?.userName)
     }
 
-
+    @OptIn(ExperimentalPagingApi::class)
     @Test
-    fun getFollowingAsPagingSource() {
-
+    fun refreshLoadReturnsSuccessResultWhenMoreDataIsPresent() = runTest {
+        val userName:String="USER_1"
+        defaultUserRepository.refreshUserByUserName(userName)
+        val remoteMediator =
+            UserRemoteMediator(
+                currentUserName = userName,
+                getUsers = fakeUserRemoteDataSource::getFollowing,
+                getUserRemoteKeyByUserName = fakeUserRemoteKeyLocalDataSource::getRemoteKeyByUserName,
+                insertUsers = {followingUser,userRemoteKey->
+                    defaultUserRepository.insertFollowersUsersWithFollowingUserWithRemoteKey(
+                        userName,followingUser,null,userRemoteKey
+                    )
+                }
+            )
+        val pagingState = PagingState<Int, UserEntity>(listOf(), null, PagingConfig(10), 10)
+        val result = remoteMediator.load(LoadType.REFRESH, pagingState)
+        assertTrue (result is RemoteMediator.MediatorResult.Success)
+        assertFalse ((result as RemoteMediator.MediatorResult.Success).endOfPaginationReached)
     }
 
+    @OptIn(ExperimentalPagingApi::class)
     @Test
-    fun getFollowersAsPagingSource() {
+    fun refreshLoadSuccessAndEndOfPaginationWhenNoMoreData() = runTest {
+        val userName:String="USER_1"
+        defaultUserRepository.refreshUserByUserName(userName)
+        val remoteMediator =
+            UserRemoteMediator(
+                currentUserName = userName,
+                getUsers = {userN,page,perPage->listOf()},
+                getUserRemoteKeyByUserName = fakeUserRemoteKeyLocalDataSource::getRemoteKeyByUserName,
+                insertUsers = {followingUser,userRemoteKey->
+                    defaultUserRepository.insertFollowersUsersWithFollowingUserWithRemoteKey(
+                        userName,followingUser,null,userRemoteKey
+                    )
+                }
+            )
+        val pagingState = PagingState<Int, UserEntity>(listOf(), null, PagingConfig(10), 10)
+        val result = remoteMediator.load(LoadType.REFRESH, pagingState)
+        assertTrue (result is RemoteMediator.MediatorResult.Success)
+        assertTrue ((result as RemoteMediator.MediatorResult.Success).endOfPaginationReached)
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    @Test
+    fun refreshLoadReturnsErrorResultWhenErrorOccurs() = runTest {
+        val userName:String="USER_1"
+        defaultUserRepository.refreshUserByUserName(userName)
+        val remoteMediator =
+            UserRemoteMediator(
+                currentUserName = userName,
+                getUsers = {userN,page,perPage->throw IllegalStateException("TEST_MEDIATOR_EXCEPTION") },
+                getUserRemoteKeyByUserName = fakeUserRemoteKeyLocalDataSource::getRemoteKeyByUserName,
+                insertUsers = {folloingUser,userRemoteKey->
+                    defaultUserRepository.insertFollowersUsersWithFollowingUserWithRemoteKey(
+                        userName,folloingUser,null,userRemoteKey
+                    )
+                }
+            )
+        val pagingState = PagingState<Int, UserEntity>(listOf(), null, PagingConfig(10), 10)
+        val result = remoteMediator.load(LoadType.REFRESH, pagingState)
+        assertTrue (result is RemoteMediator.MediatorResult.Error)
     }
 
 }
