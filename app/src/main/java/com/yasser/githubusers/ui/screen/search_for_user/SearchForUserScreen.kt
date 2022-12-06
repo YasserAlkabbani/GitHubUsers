@@ -3,7 +3,6 @@ package com.yasser.githubusers.ui.screen.search_for_user
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -36,7 +35,7 @@ import com.yasser.githubusers.utils.const.TestTag
 import kotlinx.coroutines.flow.StateFlow
 
 fun NavGraphBuilder.searchForUser(
-    navigateToUsers:(String, NavigationManager.Users.GetUsersFilter)->Unit,
+    navigateToUsers:(String, NavigationManager.Users.UsersFilter)->Unit,
     clearSelectedUser:()->Unit
 ){
     composable(NavigationManager.SearchForUser.route){
@@ -48,7 +47,7 @@ fun NavGraphBuilder.searchForUser(
         LaunchedEffect(key1 = navigationToFollowers, block = {
             navigationToFollowers?.let {
                 searchForUserUIState.doneNavigationToFollowers()
-                navigateToUsers(it,NavigationManager.Users.GetUsersFilter.Follower)
+                navigateToUsers(it,NavigationManager.Users.UsersFilter.Follower)
             }
         })
 
@@ -56,7 +55,7 @@ fun NavGraphBuilder.searchForUser(
         LaunchedEffect(key1 = navigationToFollowing, block = {
             navigationToFollowing?.let {
                 searchForUserUIState.doneNavigationToFollowing()
-                navigateToUsers(it,NavigationManager.Users.GetUsersFilter.Following)
+                navigateToUsers(it,NavigationManager.Users.UsersFilter.Following)
             }
         })
 
@@ -73,7 +72,7 @@ fun NavGraphBuilder.searchForUser(
 fun SearchForUserScreen(searchForUserUIState: SearchForUserUIState,user:StateFlow<UserDomain?>){
 
     val userSearchKey by searchForUserUIState.userNameSearchKey.collectAsState()
-    val user by user.collectAsState()
+    val userValue by user.collectAsState()
     val isLoading by searchForUserUIState.isLoading.collectAsState()
     val textForDisplay by searchForUserUIState.textForDisplay.collectAsState()
 
@@ -94,9 +93,7 @@ fun SearchForUserScreen(searchForUserUIState: SearchForUserUIState,user:StateFlo
             },
         )
         Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())) {
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             AnimatedVisibility(visible = isLoading) {
                 Column(
                     modifier = Modifier
@@ -119,12 +116,12 @@ fun SearchForUserScreen(searchForUserUIState: SearchForUserUIState,user:StateFlo
                     textForDisplay?.let { GitHubText(Modifier,stringResource(id = it),style = MaterialTheme.typography.titleLarge) }
                 }
             }
-            AnimatedVisibility(visible = user!=null) {
+            AnimatedVisibility(visible = userValue!=null) {
                 Column(
                     Modifier
                         .padding(5.dp)
                         .fillMaxWidth()) {
-                    user?.let { AnimatedContent(it) {
+                    userValue?.let { AnimatedContent(it) {
                         UserDetailsSlot(
                             userDomain = it,
                             showFollowers = searchForUserUIState::startNavigationToFollowers,

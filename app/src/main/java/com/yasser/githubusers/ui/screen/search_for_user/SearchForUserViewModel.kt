@@ -17,7 +17,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchForUserViewModel @Inject constructor(private val userRepository: UserRepository, ):ViewModel() {
+class SearchForUserViewModel @Inject constructor(private val userRepository: UserRepository):ViewModel() {
 
     val searchForUserUIState:SearchForUserUIState = SearchForUserUIState()
 

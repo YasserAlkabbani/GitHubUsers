@@ -44,13 +44,33 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="44666439">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="LGE&#10; LG-H930" value="120" />
+                  <entry key="LGH930b99aa39a" value="120" />
+                  <entry key="OnePlus&#10; IN2021" value="120" />
+                  <entry key="Status" value="80" />
+                  <entry key="Tests" value="360" />
+                  <entry key="f3772a8d" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="100641094">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="LGE&#10; LG-H930" value="120" />
+                  <entry key="LGH930b99aa39a" value="120" />
                   <entry key="OnePlus&#10; IN2021" value="120" />
+                  <entry key="Pixel_5_API_31" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="f3772a8d" value="120" />
                 </map>
@@ -64,7 +84,11 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="LGE&#10; LG-H930" value="120" />
+                  <entry key="LGH930b99aa39a" value="120" />
                   <entry key="OnePlus&#10; IN2021" value="120" />
+                  <entry key="Pixel_5_API_31" value="120" />
+                  <entry key="Status" value="80" />
                   <entry key="Tests" value="360" />
                   <entry key="f3772a8d" value="120" />
                 </map>
@@ -107,6 +131,23 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="OnePlus&#10; IN2021" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="f3772a8d" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1701560469">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="LGE&#10; LG-H930" value="120" />
+                  <entry key="LGH930b99aa39a" value="120" />
+                  <entry key="OnePlus&#10; IN2021" value="120" />
+                  <entry key="Status" value="80" />
                   <entry key="Tests" value="360" />
                   <entry key="f3772a8d" value="120" />
                 </map>

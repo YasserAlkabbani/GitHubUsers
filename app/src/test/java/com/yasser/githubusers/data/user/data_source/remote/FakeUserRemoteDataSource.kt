@@ -23,14 +23,15 @@ class FakeUserRemoteDataSource:UserRemoteDataSource {
             add(userRemote)
         }
     }
+    fun getFakeUser(limit:Int)=users.take(limit)
 
     override suspend fun findUserByUserName(userName: String): UserRemote? =
         users.firstOrNull { it.login==userName }
 
     override suspend fun getFollowing(userName: String, page: Int?, perPage: Int): List<UserRemote> =
-        users.filter { (it.id?:0) in 70 .. 90 }
+        users.filter { (it.id?:0) in 70 .. 90 }.drop((page?:0)*perPage)
 
     override suspend fun getFollowers(userName: String, page: Int?, perPage: Int): List<UserRemote> =
-        users.filter { (it.id?:0) in 40 .. 60 }
+        users.filter { (it.id?:0) in 40 .. 60 }.drop((page?:0)*perPage)
 
 }

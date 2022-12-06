@@ -19,8 +19,7 @@ import com.yasser.githubusers.R
 fun GitHubImage(modifier: Modifier, imageUrl:String) {
     AsyncImage(
         modifier = modifier.clip(CircleShape),
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl).crossfade(true).build(),
+        model = ImageRequest.Builder(LocalContext.current).data(imageUrl).crossfade(true).build(),
         placeholder = rememberVectorPainter(image = Icons.Default.Person),
         contentDescription = stringResource(R.string.avatar),
         contentScale = ContentScale.Crop,

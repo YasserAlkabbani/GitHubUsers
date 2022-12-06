@@ -29,7 +29,7 @@ class SearchForUserViewModelTest {
     }
 
     @Test
-    fun searchForUser_USER2_USER2()= runTest{
+    fun searchForUser_USER2()= runTest{
 
         assertNull(searchForUserViewModel.user.value)
         searchForUserViewModel.searchForUserUIState.updateUserNameSearchKey("USER_2")
@@ -41,7 +41,7 @@ class SearchForUserViewModelTest {
     }
 
     @Test
-    fun updateUserNameSearchKey_A_EqualA() {
+    fun updateUserNameSearchKey_A() {
         searchForUserViewModel.searchForUserUIState.updateUserNameSearchKey("")
         assertEquals(searchForUserViewModel.searchForUserUIState.userNameSearchKey.value,"")
         searchForUserViewModel.searchForUserUIState.updateUserNameSearchKey("A")

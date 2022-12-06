@@ -18,12 +18,18 @@ import com.yasser.githubusers.ui.component.GitHubButton
 import com.yasser.githubusers.ui.component.GitHubImage
 import com.yasser.githubusers.ui.component.GitHubText
 import com.yasser.githubusers.utils.const.TestTag
+import com.yasser.githubusers.utils.const.TestTag.USER_DETAILS_USER_NAME
 
 @Composable
-private fun KeyWithValue(modifier: Modifier=Modifier,key:String,value:String,onClick:(()->Unit)?=null){
+private fun KeyWithValue(
+    modifier: Modifier=Modifier,key:String,value:String,onClick:(()->Unit)?=null,
+    buttonModifier: Modifier=Modifier
+){
     Surface(modifier = modifier.padding(1.dp), shape = MaterialTheme.shapes.medium) {
         Row(
-            modifier = Modifier.padding(8.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             GitHubText(
@@ -34,7 +40,9 @@ private fun KeyWithValue(modifier: Modifier=Modifier,key:String,value:String,onC
             )
             if (onClick!=null){
                 GitHubButton(
-                    modifier = Modifier.fillMaxWidth().weight(3f),
+                    modifier = buttonModifier
+                        .fillMaxWidth()
+                        .weight(3f),
                     text = "${stringResource(R.string.show)} $value ${stringResource(R.string.users)}", onClick = onClick
                 )
             }else{
@@ -54,9 +62,11 @@ fun UserDetailsSlot(
     userDomain: UserDomain,
     showFollowers:(String)->Unit,showFollowing:(String)->Unit
 ){
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .testTag(TestTag.USER_DETAILS)) {
         Column(
-            Modifier.testTag(TestTag.USER_DETAILS)
+            Modifier
                 .fillMaxWidth()
                 .padding(10.dp)) {
             Row(
@@ -68,11 +78,21 @@ fun UserDetailsSlot(
             ) {
                 GitHubImage(modifier=Modifier.size(70.dp),imageUrl = userDomain.avatarUrl)
                 Spacer(modifier = Modifier.width(15.dp))
-                GitHubText(text = userDomain.userName, style = MaterialTheme.typography.displaySmall)
+                GitHubText(modifier = Modifier.testTag(USER_DETAILS_USER_NAME), text = userDomain.userName, style = MaterialTheme.typography.displaySmall)
             }
             KeyWithValue(key = stringResource(R.string.type), value = userDomain.type)
             KeyWithValue(key = stringResource(R.string.name), value = userDomain.name)
             KeyWithValue(key = stringResource(R.string.company), value = userDomain.company)
+            KeyWithValue(
+                key = stringResource(R.string.followers), value = userDomain.followers.toString(),
+                onClick = {showFollowers(userDomain.userName)},
+                buttonModifier = Modifier.testTag(TestTag.FOLLOWER_BUTTON)
+            )
+            KeyWithValue(
+                key = stringResource(R.string.following), value = userDomain.following.toString(),
+                onClick = {showFollowing(userDomain.userName)},
+                buttonModifier = Modifier.testTag(TestTag.FOLLOWING_BUTTON)
+            )
             KeyWithValue(key = stringResource(R.string.blog), value = userDomain.blog)
             KeyWithValue(key = stringResource(R.string.location), value = userDomain.location)
             KeyWithValue(key = stringResource(R.string.email), value = userDomain.email)
@@ -80,14 +100,6 @@ fun UserDetailsSlot(
             KeyWithValue(key = stringResource(R.string.twitter_user_name), value = userDomain.twitterUsername)
             KeyWithValue(key = stringResource(R.string.public_repos), value = userDomain.publicRepos.toString())
             KeyWithValue(key = stringResource(R.string.public_gists), value = userDomain.publicGists.toString())
-            KeyWithValue(
-                key = stringResource(R.string.followers), value = userDomain.followers.toString(),
-                onClick = {showFollowers(userDomain.userName)}
-            )
-            KeyWithValue(
-                key = stringResource(R.string.following), value = userDomain.following.toString(),
-                onClick = {showFollowing(userDomain.userName)}
-            )
             KeyWithValue(key = stringResource(R.string.updated_date), value = userDomain.updatedAt)
             KeyWithValue(key = stringResource(R.string.created_date), value = userDomain.createdAt)
         }
